@@ -1,33 +1,39 @@
 package com.example.controller;
 
-import com.example.config.R;
-import com.example.entity.User;
+
+import com.example.config.Result;
 import com.example.service.UserService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
-
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
-import java.time.LocalDateTime;
+
+
 
 @RestController
 @RequestMapping("/user")
 @Slf4j
+@Api(tags = "用户功能")
 public class UserController {
 
-/*    @Resource
+    @Resource
     private UserService userService;
 
-    @PostMapping("/create")
-    public R<User> save(@RequestBody User users){
-        log.info("注册用户开始...");
+    @ApiOperation("发送验证码")
+    @PostMapping("code")
+    public Result sendCode(@RequestParam("phone") @ApiParam("请求的手机号") String phone) {
+        //发送短信验证码并保存验证码
+        return userService.senCode(phone);
+    }
 
-        users.setCreate_time(LocalDateTime.now());
 
-        userService.save(users);
-        return R.success(users);
-    }*/
+    @ApiOperation("登录验证")
+    @GetMapping("login")
+    public Result login(String username,String passwd){
+        Result login = userService.login(username , passwd);
+        return Result.ok(login);
+    }
+
 }
